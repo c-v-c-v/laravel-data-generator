@@ -1,0 +1,41 @@
+{
+    "name": "cv/laravel-data-generator",
+    "description": "generate laravel data by mysql table",
+    "type": "library",
+    "require": {
+        "php": "^8.2",
+        "spatie/laravel-data": "^4.7",
+        "zircote/swagger-php": "^4.10",
+        "laravel/framework": "^11.9"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11",
+        "laravel/pint": "^1.17"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cv\\LaravelDataGenerator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "cv"
+        }
+    ],
+    "scripts": {
+        "analyse": [
+            "@php vendor/bin/phpstan analyse"
+        ],
+        "pint": [
+            "@php vendor/bin/pint"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cv\\LaravelDataGenerator\\LaravelDataGeneratorProvider"
+            ]
+        }
+    }
+}
