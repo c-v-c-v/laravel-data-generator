@@ -9,4 +9,5 @@ return [
         'created_at' => '创建时间',
         'updated_at' => '修改时间',
     ],
+    'request_exclude_columns' => ['created_at', 'updated_at'],
 ];

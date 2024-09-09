@@ -49,6 +49,11 @@ class MakeDataCommand extends Command
         parent::__construct();
     }
 
+    protected function getConfig(string $key, $default = null)
+    {
+        return config('laravel-data-generator.'.$key, $default);
+    }
+
     public function handle(): void
     {
         // 初始化配置

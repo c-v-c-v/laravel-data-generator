@@ -23,11 +23,11 @@ class MakeRequestCommand extends MakeDataCommand
         $columnsCollection = collect(parent::getColumns($tableName));
 
         // 去除创建和更新时间
-        $columnsCollection = $columnsCollection->whereNotIn('name', ['created_at', 'updated_at']);
+        $columnsCollection = $columnsCollection->whereNotIn('name', $this->getConfig('request_exclude_columns', []));
 
         // 如果是create request，则去除id
         if (! $this->isUpdateRequest()) {
-            $columnsCollection = $columnsCollection->where('name', '!=', 'id');
+            $columnsCollection = $columnsCollection->where('name', '!=', $this->primaryKey);
         }
 
         return $columnsCollection->toArray();
