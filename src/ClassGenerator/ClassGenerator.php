@@ -126,9 +126,7 @@ class ClassGenerator
                 $attribute = $this->getClassName($attribute);
             }
 
-            if (! in_array($attribute, $this->attributes)) {
-                $this->attributes[] = $attribute;
-            }
+            $this->attributes[] = $attribute;
         }
 
         return $this;

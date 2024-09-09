@@ -33,6 +33,16 @@ class MakeDataCommand extends Command
      */
     protected bool $disableValidation = false;
 
+    /**
+     * 默认列注释
+     */
+    protected array $defaultColumnComment = [];
+
+    /**
+     * 主键名称
+     */
+    protected string $primaryKey = 'id';
+
     public function __construct(
         private readonly Filesystem $filesystem
     ) {
@@ -43,6 +53,7 @@ class MakeDataCommand extends Command
     {
         // 初始化配置
         $this->baseDataClass = config('laravel-data-generator.base_data_class');
+        $this->defaultColumnComment = config('laravel-data-generator.default_column_comment');
 
         $tableName = $this->getTableName();
 
@@ -119,8 +130,11 @@ class MakeDataCommand extends Command
     {
         $phpType = $this->mysqlTypeToPhpType($column['type']);
         $classProperty = $classGenerator->addProperty(Str::camel($column['name']), $phpType, $this->getColumnComment($column))
-            ->setNullable($column['nullable'])
-            ->useAttribute(Property::class);
+            ->setNullable($column['nullable']);
+
+        if ($classProperty->name !== $this->primaryKey) {
+            $classProperty->useAttribute(Property::class);
+        }
 
         if (! $this->disableValidation) {
             $this->addValidation($classProperty, $column);
@@ -270,8 +284,8 @@ class MakeDataCommand extends Command
             }
         }
 
-        if ($column['name'] === 'id') {
-            $classProperty->useAttribute("FromRouteParameter('id')")
+        if ($column['name'] === $this->primaryKey) {
+            $classProperty->useAttribute("FromRouteParameter('{$this->primaryKey}')")
                 ->use(FromRouteParameter::class);
         }
     }
@@ -341,12 +355,7 @@ class MakeDataCommand extends Command
             return $column['comment'];
         }
 
-        return match ($column['name']) {
-            'id' => '主键',
-            'created_at' => '创建时间',
-            'updated_at' => '修改时间',
-            default => null,
-        };
+        return $this->defaultColumnComment[$column['name']] ?? null;
     }
 
     protected function makeDirectory($path)
