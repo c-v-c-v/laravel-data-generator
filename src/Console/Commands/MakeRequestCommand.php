@@ -10,6 +10,8 @@ class MakeRequestCommand extends MakeDataCommand
 
     protected $description = 'make request data';
 
+    protected array $schemeExcludePropertyNames = ['id'];
+
     protected function getQualifyClassName(string $tableName): string
     {
         $className = Str::studly(Str::singular($tableName)).'Request';

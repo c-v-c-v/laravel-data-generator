@@ -43,6 +43,8 @@ class MakeDataCommand extends Command
      */
     protected string $primaryKey = 'id';
 
+    protected array $schemeExcludePropertyNames = [];
+
     public function __construct(
         private readonly Filesystem $filesystem
     ) {
@@ -137,7 +139,7 @@ class MakeDataCommand extends Command
         $classProperty = $classGenerator->addProperty(Str::camel($column['name']), $phpType, $this->getColumnComment($column))
             ->setNullable($column['nullable']);
 
-        if ($classProperty->name !== $this->primaryKey) {
+        if (! in_array($column['name'], $this->schemeExcludePropertyNames)) {
             $classProperty->useAttribute(Property::class);
         }
 
@@ -257,6 +259,7 @@ class MakeDataCommand extends Command
         $baseType = strtolower(preg_replace('/\(.*/', '', $mysqlType));
         // 兼容mysql8
         $baseType = explode(' ', $baseType)[0] ?? null;
+
         return $typeMap[$baseType] ?? 'string'; // Default to 'string' if type is not found
     }
 
