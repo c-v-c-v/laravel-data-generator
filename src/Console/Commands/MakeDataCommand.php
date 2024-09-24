@@ -255,7 +255,8 @@ class MakeDataCommand extends Command
 
         // Extract the base type in case of additional information like length or attributes
         $baseType = strtolower(preg_replace('/\(.*/', '', $mysqlType));
-
+        // 兼容mysql8
+        $baseType = explode(' ', $baseType)[0] ?? null;
         return $typeMap[$baseType] ?? 'string'; // Default to 'string' if type is not found
     }
 
